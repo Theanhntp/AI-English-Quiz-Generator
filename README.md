@@ -112,6 +112,21 @@ curl -X POST http://localhost:3000/quiz/generate \
 * Qdrant >= 1.8
 * OpenAI API Key
 
+### ⚙️ .env Configuration
+  # Database connection
+  DATABASE_URL=postgresql://username:password@localhost:5432/quiz_generator
+  
+  # OpenAI API (used for AI quiz generation)
+  OPENAI_API_KEY=your_openai_api_key_here
+
+  # Session secret for authentication
+  SESSION_SECRET=your_random_session_secret_here
+
+To generate a strong session secret:
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
+
 ### 🔧 Install Dependencies
 
 ```bash
@@ -134,6 +149,8 @@ cd ../client && npm run dev
 
 ---
 
-### 🛠️ Contact: github: theanhntp
+### 📬 Contact: 
+GitHub: theanhntp
+Email: theanhntp@gmail.com
 
 ---

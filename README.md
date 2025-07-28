@@ -54,7 +54,7 @@ AI-ENGLISH-QUIZ-GENERATOR/
 
 ---
 
-## 🔁 Quiz Generation Flow
+## 🤁 Quiz Generation Flow
 
 1. Teacher uploads learning material
 2. Text is extracted and chunked (\~300 tokens)
@@ -88,7 +88,7 @@ AI-ENGLISH-QUIZ-GENERATOR/
 
 ---
 
-## 🧪 Sample curl for Testing
+## 🤪 Sample curl for Testing
 
 ```bash
 curl -X POST http://localhost:3000/quiz/generate \
@@ -105,27 +105,14 @@ curl -X POST http://localhost:3000/quiz/generate \
 
 ## 🛠️ Setup & Installation
 
-### 🧩 Prerequisites
+### 🤩 Prerequisites
 
 * Node.js >= 20
 * MongoDB >= 7 (or PostgreSQL if using Drizzle)
 * Qdrant >= 1.8
 * OpenAI API Key
 
-### ⚙️ .env Configuration
-  # Database connection
-  DATABASE_URL=postgresql://username:password@localhost:5432/quiz_generator
-  
-  # OpenAI API (used for AI quiz generation)
-  OPENAI_API_KEY=your_openai_api_key_here
-
-  # Session secret for authentication
-  SESSION_SECRET=your_random_session_secret_here
-
-To generate a strong session secret:
-```bash
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
-```
+---
 
 ### 🔧 Install Dependencies
 
@@ -133,6 +120,8 @@ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
 cd client && npm install
 cd ../server && npm install
 ```
+
+---
 
 ### ▶️ Running the App
 
@@ -149,8 +138,32 @@ cd ../client && npm run dev
 
 ---
 
-### 📬 Contact: 
-GitHub: theanhntp
-Email: theanhntp@gmail.com
+## ⚙️ .env Configuration
+
+Create a `.env` file in the root directory or `server/` with the following:
+
+```env
+# Database connection
+DATABASE_URL=postgresql://username:password@localhost:5432/quiz_generator
+
+# OpenAI API (used for AI quiz generation)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Session secret for authentication
+SESSION_SECRET=your_random_session_secret_here
+```
+
+To generate a strong session secret:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
 
 ---
+
+## 📬 Contact
+
+For issues, ideas or collaboration:
+
+**GitHub**: [theanhntp](https://github.com/theanhntp)
+**Email**: [theanhntp@gmail.com](mailto:theanhntp@gmail.com)

@@ -1,0 +1,87 @@
+You are a senior full-stack engineer, AI-assessment specialist, and UI/UX designer.
+
+== GOAL ==
+Generate a **production-quality web application** called **"AI English Quiz Generator"**.
+
+== DELIVERABLES ==
+Create these top-level folders + README:
+
+1. /frontend React 18 + Vite + TailwindCSS + shadcn/ui + Zustand + TanStack Query  
+2. /backend  Node.js 20 + Express + Mongoose + Qdrant RAG pipeline  
+3. /database  MongoDB schema files & seed script  
+4. README.md  Local-run instructions (Windows/macOS/Linux), no Docker/Next.js
+
+== FRONTEND REQUIREMENTS ==
+• SPA built with Vite.  
+• Pages → /login, /dashboard (tabs: Materials | Generate Quiz | Results), /quiz/:id, /result/:id.  
+• Components → NavBar, FileDropZone, QuizEditor, ProgressChart (Recharts).  
+• Styling → Tailwind + shadcn/ui, framer-motion page transitions.  
+• Auth state via JWT (stored in HttpOnly cookie); use Zustand for global state.  
+
+== BACKEND REQUIREMENTS ==
+• Express server (`app.js`) with route folders: auth, materials, quiz.  
+• Use **Mongoose** for models: User, Material, Chunk, Quiz, Attempt.  
+• Endpoint list:  
+  – POST /auth/signup     → register (roles: teacher | student)  
+  – POST /auth/login      → issue JWT  
+  – POST /materials/upload   → upload PDF/DOCX/TXT (multer)  
+  – POST /quiz/generate    → RAG pipeline (see below)  
+  – GET  /quiz/:id       → fetch quiz JSON  
+  – POST /quiz/:id/submit   → grade + store attempt  
+
+== RAG PIPELINE (services/rag.js) ==
+1. Extract text (pdf-parse, mammoth, plain text).  
+2. Chunk (≈ 300 tokens) & embed via **OpenAI Embeddings (`text-embedding-3-small`)**.  
+3. Upsert embeddings into **Qdrant** collection “chunks”.  
+4. When generating a quiz: retrieve top-k relevant chunks; craft a prompt for **GPT-4o** to output quiz JSON (MCQ, T/F, Fill-Blank) with explanation & CEFR tags.
+
+== ADAPTIVE DIFFICULTY ==
+• services/elo.js: maintain Elo rating per student & per question.  
+• `generate` endpoint accepts `targetDifficulty` (student rating) to pick question mix.  
+
+== DATABASE FOLDER ==
+/database/schemas/*.js → Mongoose schema definitions  
+/database/seed.js   → inserts demo teacher, sample material & quiz  
+
+== FILE STRUCTURE TO OUTPUT ==
+
+/frontend  
+  src/  
+    pages/ ...  
+    components/ ...  
+    hooks/ ...  
+  vite.config.ts  
+  package.json  
+
+/backend  
+  app.js  
+  routes/ (auth.js, materials.js, quiz.js)  
+  services/ (rag.js, elo.js)  
+  models/ (User.js, Material.js, Chunk.js, Quiz.js, Attempt.js)  
+  .env.example  
+  package.json  
+
+/database  
+  schemas/ ...  
+  seed.js  
+
+README.md (see below)
+
+== README CONTENT ==
+• Prereqs: Node ≥ 20, MongoDB ≥ 7, Qdrant ≥ 1.8, OpenAI key.  
+• Installation commands (`npm i` in both frontend & backend).  
+• How to run Qdrant (`qdrant --uri 127.0.0.1:6333 &`).  
+• Running backend: `node backend/app.js`.  
+• Running frontend: `npm run dev` inside /frontend.  
+• Sample cURL to test /quiz/generate.  
+• Further reading links:  
+  – GitHub **Document-SmartSummarizer-QuizGenerator**: https://github.com/MohdRasmil7/Document-SmartSummarizer-QuizGenerator-using-LLM  
+  – Mindsmith 2025 adaptive-assessment article  
+  – PrepAI & Jotform AI quiz tools for benchmarking.
+
+== OUTPUT FORMAT ==
+Print **each file** in fenced Markdown blocks **grouped by path**.  
+After all code, print the full README.md.  
+Do NOT include Docker, Next.js, or CI/CD.
+
+Begin now.

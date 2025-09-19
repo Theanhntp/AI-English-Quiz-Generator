@@ -11,6 +11,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { QuizQuestion, QuizAnswer } from "@shared/schema";
 import { Clock, Flag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 export default function QuizPage() {
   const { id } = useParams();
@@ -185,6 +186,24 @@ export default function QuizPage() {
                     <Label htmlFor="false" className="flex-1 cursor-pointer">False</Label>
                   </div>
                 </RadioGroup>
+              )}
+
+              {currentQuestion.type === "fill_blank" && (
+                <div className="space-y-4">
+                  <Label htmlFor="fill-answer" className="text-sm font-medium text-slate-700">
+                    Your Answer:
+                  </Label>
+                  <Input
+                    id="fill-answer"
+                    type="text"
+                    value={answers[currentQuestion.id] || ""}
+                    onChange={(e) =>
+                      handleAnswerChange(e.target.value)
+                    }
+                    placeholder="Type your answer here..."
+                    className="w-full p-4 text-lg"
+                  />
+                </div>
               )}
             </div>
 

@@ -15,18 +15,54 @@ declare global {
 
 const scryptAsync = promisify(scrypt);
 
+/** Tạo hash mới: định dạng "salt:hash" để thống nhất với DB */
 async function hashPassword(password: string) {
-  const salt = randomBytes(16).toString("hex");
-  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${buf.toString("hex")}.${salt}`;
+  const salt = randomBytes(16).toString("hex");            // 16 bytes -> 32 hex
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer; // 64 bytes -> 128 hex
+  const hashHex = buf.toString("hex");
+  return `${salt}:${hashHex}`;
 }
 
+/** So khớp mật khẩu: hỗ trợ cả "hash.salt" (legacy) và "salt:hash" (chuẩn mới) */
 async function comparePasswords(supplied: string, stored: string) {
-  const [hashed, salt] = stored.split(".");
-  const hashedBuf = Buffer.from(hashed, "hex");
-  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-  return timingSafeEqual(hashedBuf, suppliedBuf);
+  if (!stored) return false;
+
+  let salt: string | undefined;
+  let hashHex: string | undefined;
+
+  if (stored.includes(":")) {
+    // "salt:hash" (chuẩn mới và đúng với DB hiện tại)
+    const [a, b] = stored.split(":");
+    // đoán vị trí phòng trường hợp dữ liệu bị đảo
+    if (a && b) {
+      // salt (32 hex) vs hash (>=64 hex). Ta ưu tiên a là salt nếu có độ dài 32.
+      if (/^[0-9a-f]+$/i.test(a) && a.length === 32) {
+        salt = a;
+        hashHex = b;
+      } else {
+        // fallback: giả định b là salt
+        salt = b;
+        hashHex = a;
+      }
+    }
+  } else if (stored.includes(".")) {
+    // "hash.salt" (legacy theo code cũ)
+    const [hashed, s] = stored.split(".");
+    hashHex = hashed;
+    salt = s;
+  } else {
+    // format lạ -> fail an toàn
+    return false;
+  }
+
+  if (!salt || !hashHex) return false;
+
+  const derived = (await scryptAsync(supplied, salt, 64)) as Buffer;
+  const storedBuf = Buffer.from(hashHex, "hex");
+  if (storedBuf.length !== derived.length) return false; // tránh timing leak
+  return timingSafeEqual(storedBuf, derived);
 }
+
 
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {

@@ -38,12 +38,6 @@ export default function HomePage() {
               </h2>
               <p className="text-slate-600 mt-1">Ready to create engaging quizzes with AI?</p>
             </div>
-            <Button 
-              className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-sm flex items-center space-x-2"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Quick Create Quiz</span>
-            </Button>
           </div>
 
           {/* Stats Cards */}
